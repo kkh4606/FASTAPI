@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr, PlainSerializer
 
 from datetime import datetime
 from typing import Optional, List
+from pydantic.types import conint
 
 
 class PostBase(BaseModel):
@@ -34,6 +35,7 @@ class UserUpdate(UserCreate):
 class PostOut(PostBase):
     id: int
     created_at: datetime
+    votes: int = 0
 
 
 class UserOut(BaseModel):
@@ -62,3 +64,8 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str | None] = None
+
+
+class Vote(BaseModel):
+    post_id: int
+    dir: conint(le=1)  # type:ignore

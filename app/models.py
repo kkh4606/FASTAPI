@@ -19,7 +19,7 @@ class Post(Base):
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
-    owner = relationship("User", back_populates="post")
+    owner = relationship("User")
 
 
 class User(Base):
@@ -31,4 +31,19 @@ class User(Base):
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )
 
-    post = relationship("Post", back_populates="owner")
+    post = relationship("Post")
+
+
+class Vote(Base):
+
+    __tablename__ = "votes"
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    post_id = Column(
+        Integer,
+        ForeignKey("posts.id", ondelete="CASCADE"),
+        primary_key=True,
+    )
