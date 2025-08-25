@@ -1,3 +1,18 @@
+# Editor and environment
+.vscode/
+.idea/
 venv/
-__pycache__
 .env
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Alembic should NOT be ignored
+# Keep alembic/ and alembic/versions/ so migrations are tracked
+
+# OS files
+.DS_Store
+Thumbs.db
