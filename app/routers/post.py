@@ -9,8 +9,7 @@ from sqlalchemy import func
 router = APIRouter(prefix="/posts", tags=["POST"])
 
 
-# @router.get("/", response_model=List[schemas.Post])
-@router.get("/")
+@router.get("/", response_model=List[schemas.PostOut])
 def get_posts(
     db: Session = Depends(database.get_db),
     current_user: int = Depends(oauth2.get_current_user),
@@ -19,20 +18,23 @@ def get_posts(
     search: Optional[str] = "",
 ):
 
+    # posts = (
+    #     db.query(models.Post)
+    #     .filter(models.Post.title.contains(search))
+    #     .limit(limit)
+    #     .offset(skip)
+    # ).all()
     posts = (
-        db.query(models.Post)
-        .filter(models.Post.title.contains(search))
-        .limit(limit)
-        .offset(skip)
-    ).all()
-    result = (
         db.query(models.Post, func.count(models.Vote.post_id).label("votes"))
         .join(models.Vote, models.Post.id == models.Vote.post_id, isouter=True)
         .group_by(models.Post.id)
+        .filter(models.Post.title.contains(search))
+        .limit(limit)
+        .offset(skip)
         .all()
     )
 
-    return [{"Post": post, "votes": votes} for post, votes in result]
+    return posts
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
@@ -49,13 +51,23 @@ def create_posts(
     return new_post
 
 
-@router.get("/{id}", response_model=schemas.Post)
+@router.get("/{id}", response_model=schemas.PostOut)
 def get_post(
     id: int,
     db: Session = Depends(database.get_db),
     current_user: int = Depends(oauth2.get_current_user),
 ):
-    post = db.query(models.Post).filter(models.Post.id == id).first()
+    # post = db.query(models.Post).filter(models.Post.id == id).first()
+
+    post = (
+        (
+            db.query(models.Post, func.count(models.Vote.post_id).label("votes"))
+            .join(models.Vote, models.Post.id == models.Vote.post_id, isouter=True)
+            .group_by(models.Post.id)
+        )
+        .filter(models.Post.id == id)
+        .first()
+    )
 
     if not post:
         raise HTTPException(
