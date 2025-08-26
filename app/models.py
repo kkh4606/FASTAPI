@@ -31,6 +31,8 @@ class User(Base):
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )
 
+    phone_number = Column(String)
+
     post = relationship("Post", back_populates="owner")
 
 
