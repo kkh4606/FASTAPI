@@ -19,7 +19,7 @@ def get_users(
 
 # @router.post("/", response_model=schemas.UserOut, status_code=status.HTTP_201_CREATED)
 @router.post(
-    "/", response_model=schemas.UserRegOut, status_code=status.HTTP_201_CREATED
+    "/register", response_model=schemas.UserRegOut, status_code=status.HTTP_201_CREATED
 )
 def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
 
