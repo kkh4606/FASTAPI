@@ -17,7 +17,10 @@ def get_users(
     return users
 
 
-@router.post("/", response_model=schemas.UserOut, status_code=status.HTTP_201_CREATED)
+# @router.post("/", response_model=schemas.UserOut, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/", response_model=schemas.UserRegOut, status_code=status.HTTP_201_CREATED
+)
 def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
 
     hashed_password = utils.hash_password(user.password)
@@ -27,7 +30,13 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    return new_user
+
+    access_token = oauth2.create_access_token(data={"user_id": new_user.id})
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user_details": new_user,
+    }
 
 
 @router.get("/{id}", response_model=schemas.UserOut)

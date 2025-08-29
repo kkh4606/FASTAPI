@@ -34,6 +34,6 @@ def login_user(
 
     access_token = oauth2.create_access_token(data={"user_id": user.id})
 
-    tokenData = schemas.Token(access_tokne=access_token, token_type="bearer")
+    tokenData = schemas.Token(access_token=access_token, token_type="bearer")
 
     return tokenData

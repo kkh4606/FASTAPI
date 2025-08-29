@@ -41,6 +41,12 @@ class UserOut(BaseModel):
         from_attributes = True
 
 
+class UserRegOut(BaseModel):
+    user_details: UserOut
+    access_token: str
+    token_type: str
+
+
 class Post(PostBase):
     id: int
     created_at: datetime
@@ -61,7 +67,7 @@ class PostOut(BaseModel):
 
 
 class Token(BaseModel):
-    access_tokne: str
+    access_token: str
     token_type: str
 
 
