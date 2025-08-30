@@ -1,9 +1,8 @@
 from pydantic_settings import BaseSettings
-import os
 
 
 class Settings(BaseSettings):
-    # These are optional because Railway uses DATABASE_URL
+    database_url: str | None = None  # Add this for Railway
     database_hostname: str | None = None
     database_port: str | None = None
     database_password: str | None = None
