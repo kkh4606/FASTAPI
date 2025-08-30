@@ -3,12 +3,13 @@ import os
 
 
 class Settings(BaseSettings):
+    # These are optional because Railway uses DATABASE_URL
+    database_hostname: str | None = None
+    database_port: str | None = None
+    database_password: str | None = None
+    database_name: str | None = None
+    database_username: str | None = None
 
-    database_hostname: str
-    database_port: str
-    database_password: str
-    database_name: str
-    database_username: str
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int
